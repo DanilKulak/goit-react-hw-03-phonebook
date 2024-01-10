@@ -15,27 +15,22 @@ class MyPhonebook extends Component {
     filter: '',
   };
 
-  isDublicate({ name, number }) {
-    const normalizedName = name.toLowerCase();
-    const normalizedNumber = number.toLowerCase();
+  isDuplicate({ name, number }) {
     const { contacts } = this.state;
 
-    const dublicate = contacts.find(item => {
-      const normalizedCurrentName = item.name.toLowerCase();
-      const normalizedCurrentNumber = item.number.toLowerCase();
+    const duplicate = contacts.find(item => {
       return (
-        normalizedCurrentName === normalizedName &&
-        normalizedCurrentNumber === normalizedNumber
+        item.name.toLowerCase() === name.toLowerCase() &&
+        item.number.toLowerCase() === number.toLowerCase()
       );
     });
-    return Boolean(dublicate);
+
+    return Boolean(duplicate);
   }
 
-  addContacts = data => {
-    if (this.isDublicate(data)) {
-      return alert(
-        `Contact with ${data.name} and ${data.number} already in list`
-      );
+  addContact = data => {
+    if (this.isDuplicate(data)) {
+      return alert(`Contact with ${data.name} and ${data.number} already in the list`);
     }
 
     this.setState(({ contacts }) => {
@@ -49,7 +44,7 @@ class MyPhonebook extends Component {
     });
   };
 
-  deleteContacts = id => {
+  deleteContact = id => {
     this.setState(({ contacts }) => {
       const newContacts = contacts.filter(item => item.id !== id);
 
@@ -85,17 +80,21 @@ class MyPhonebook extends Component {
   }
 
   render() {
-    const { addContacts, deleteContacts } = this;
+    const { addContact, deleteContact } = this;
     const contacts = this.getFilteredContacts();
     return (
-     <Container>
-      <h2>Phonebook</h2>
-        <PhonebookForm onSubmit={addContacts} />
+      <Container>
+        <h2>Phonebook</h2>
+        <PhonebookForm onSubmit={addContact} />
         <div>
-          <input onChange={this.changeFilter} name="filter" placeholder="Search" />
-          <PhonebookList items={contacts} deleteContacts={deleteContacts} />
+          <input
+            onChange={this.changeFilter}
+            name="filter"
+            placeholder="Поиск"
+          />
+          <PhonebookList items={contacts} deleteContact={deleteContact} />
         </div>
-        </Container>
+      </Container>
     );
   }
 }
